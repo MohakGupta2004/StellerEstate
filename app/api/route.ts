@@ -1,7 +1,12 @@
-import { GoogleGenAI } from "@google/genai";
+import OpenAI from "openai";
 import { NextResponse } from "next/server";
 
-const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
+const client = new OpenAI({
+  apiKey: process.env.GEMINI_API_KEY || "",
+  baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+});
+
+const MODEL = "gemini-2.0-flash-lite";
 
 const PLANET_CATALOG = [
   "THE SUN - ◎1.001 SOL - Massive ball of plasma. Too hot. Ultimate space heater.",
@@ -15,12 +20,19 @@ const PLANET_CATALOG = [
   "BLACK HOLE - ◎0.1 SOL - Infinite density. No refunds. Ever.",
 ].join("\n");
 
+async function complete(prompt: string): Promise<string> {
+  const res = await client.chat.completions.create({
+    model: MODEL,
+    messages: [{ role: "user", content: prompt }],
+  });
+  return (res.choices[0]?.message?.content || "").trim();
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { action } = body;
 
-    // AI Planet Concierge Chat
     if (action === "chat") {
       const { message, chatHistory } = body;
 
@@ -30,7 +42,7 @@ export async function POST(req: Request) {
         )
         .join("\n");
 
-      const systemPrompt =
+      const prompt =
         'You are "VOID", the galaxy\'s most elite AI real estate agent for SpaceEstate.\n\n' +
         "Available planets:\n" +
         PLANET_CATALOG +
@@ -50,19 +62,13 @@ export async function POST(req: Request) {
         message +
         "\nAgent:";
 
-      const result = await genAI.models.generateContent({
-        model: "gemini-2.0-flash",
-        contents: systemPrompt,
-      });
-
-      return NextResponse.json({ reply: (result.text || "").trim() });
+      return NextResponse.json({ reply: await complete(prompt) });
     }
 
-    // Planet-specific quick insight
     if (action === "insight") {
       const { planetName, planetDescription } = body;
 
-      const insightPrompt =
+      const prompt =
         "You are a sassy intergalactic real estate agent. " +
         'Generate one fun, witty "insider tip" (1-2 sentences) about this planet: ' +
         planetName +
@@ -70,27 +76,16 @@ export async function POST(req: Request) {
         planetDescription +
         ". Be creative and funny. No quotes around your response.";
 
-      const result = await genAI.models.generateContent({
-        model: "gemini-2.0-flash",
-        contents: insightPrompt,
-      });
-
-      return NextResponse.json({ insight: (result.text || "").trim() });
+      return NextResponse.json({ insight: await complete(prompt) });
     }
 
-    // Classified Planet Intelligence Dossier
     if (action === "audit") {
       const { planetName, details } = body;
 
-      const auditPrompt =
+      const prompt =
         `You are Agent VOID-9, a classified Galactic Property Intelligence operative. Generate a secret dossier on this planet for a prospective buyer.\nPlanet: ${planetName}\nListing details: ${details}\n\nReturn ONLY valid JSON, no markdown, no code blocks:\n{\n  "caseId": "GPI-XXXXX (5 random digits)",\n  "clearanceLevel": "one of: CLASSIFIED / TOP SECRET / EYES ONLY / COSMIC CLEARANCE",\n  "sections": [\n    {"label": "STRUCTURAL CONDITION", "content": "1-2 sentence absurd but specific assessment", "flag": "OK|WARNING|DANGER"},\n    {"label": "OCCUPANCY STATUS", "content": "any alien tenants, squatters, or void entities", "flag": "OK|WARNING|DANGER|UNKNOWN"},\n    {"label": "HAZARD ASSESSMENT", "content": "cosmic dangers, hostile neighbors, environmental risks", "flag": "OK|WARNING|DANGER"},\n    {"label": "INVESTMENT OUTLOOK", "content": "absurd financial analysis with made-up galactic market data", "flag": "OK|WARNING|DANGER"}\n  ],\n  "verdict": "BUY|AVOID|PROCEED WITH CAUTION",\n  "verdictReason": "one punchy funny sentence",\n  "classified": "one genuinely surprising absurd secret about this planet that no listing mentions",\n  "agent": "a cool spy codename like 'Agent Null-7' or 'Operative Singularity'"\n}\n\nRules: be specific to this planet's real traits, mix genuine-sounding with absurd humor, classified should feel like a real secret`;
 
-      const result = await genAI.models.generateContent({
-        model: "gemini-2.0-flash-lite",
-        contents: auditPrompt,
-      });
-
-      const raw = (result.text || "").trim().replace(/```json\n?|\n?```/g, "");
+      const raw = (await complete(prompt)).replace(/```json\n?|\n?```/g, "");
       try {
         const dossier = JSON.parse(raw);
         return NextResponse.json({ dossier });
@@ -99,7 +94,6 @@ export async function POST(req: Request) {
       }
     }
 
-    // Dispute dossier findings
     if (action === "appeal") {
       const { dossier, message } = body;
 
@@ -107,15 +101,10 @@ export async function POST(req: Request) {
         .map((s) => `${s.label} [${s.flag}]: ${s.content}`)
         .join("\n");
 
-      const appealPrompt =
+      const prompt =
         `You are Agent VOID-9, a Galactic Property Intelligence operative. A buyer is disputing your classified dossier findings.\nYour findings:\n${sectionSummary}\nVerdict: ${dossier.verdict} — ${dossier.verdictReason}\n\nBuyer says: "${message}"\n\nRespond in 2-3 sentences as a dry, slightly sinister intelligence operative. Either stand your ground with classified evidence they can't verify, or reluctantly revise one finding while adding a new suspicious detail. Stay in character. No bureaucracy — more spy thriller.`;
 
-      const result = await genAI.models.generateContent({
-        model: "gemini-2.0-flash-lite",
-        contents: appealPrompt,
-      });
-
-      return NextResponse.json({ response: (result.text || "").trim() });
+      return NextResponse.json({ response: await complete(prompt) });
     }
 
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });

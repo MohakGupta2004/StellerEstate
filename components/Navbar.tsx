@@ -24,7 +24,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onExplore, onHome }) => {
         onClick={onHome}
       >
         <Rocket className="w-6 h-6 text-white group-hover:rotate-12 transition-transform" />
-        <span className="text-xl font-bold tracking-tighter uppercase">SpaceEstate</span>
+        <span className="text-xl font-bold tracking-tighter uppercase">StellerState</span>
       </div>
 
       <div className="hidden md:flex items-center gap-8 text-sm font-medium uppercase tracking-widest text-muted-foreground">
