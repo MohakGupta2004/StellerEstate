@@ -100,10 +100,11 @@ export const BuyModal: React.FC<BuyModalProps> = ({ planet, isOpen, onClose }) =
       // Small delay to ensure styles are fully applied
       await new Promise(resolve => setTimeout(resolve, 100));
       
-      const dataUrl = await toJpeg(certificateRef.current, { 
-        quality: 0.95, 
+      const dataUrl = await toJpeg(certificateRef.current, {
+        quality: 0.95,
         backgroundColor: '#0a0a0a',
-        pixelRatio: 2 // Higher resolution for download
+        pixelRatio: 2,
+        skipFonts: true,
       });
       
       const link = document.createElement('a');
