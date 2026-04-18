@@ -96,7 +96,7 @@ export const PLANETS: Planet[] = [
     price: 32000,
     color: "#C5AB6E",
     auraColor: "rgba(197, 171, 110, 0.3)",
-    image: "https://imgs.search.brave.com/8zSuinn8hvtF9D4iA4i33q-ZRy_OOe3AZ9TcaEvfgQg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTUv/NDUzLzg3Mi9zbWFs/bC9zYXR1cm4tcGxh/bmV0LXdpdGgtcmlu/Z3MtaW4tcmVhbGlz/dGljLXJlbmRlcmlu/Zy1pc29s/YXRlZC1v/bi10cmFuc3BhcmVu/dC1iYWNrZ3JvdW5k/LWZyZWUtcG5nLnBu/Zw",
+    image: "https://imgs.search.brave.com/8zSuinn8hvtF9D4iA4i33q-ZRy_OOe3AZ9TcaEvfgQg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTUv/NDUzLzg3Mi9zbWFs/bC9zYXR1cm4tcGxh/bmV0LXdpdGgtcmlu/Z3MtaW4tcmVhbGlz/dGljLXJlbmRlcmlu/Zy1pc29sYXRlZC1v/bi10cmFuc3BhcmVu/dC1iYWNrZ3JvdW5k/LWZyZWUtcG5nLnBu/Zw",
     alienComment: "The rings are a nightmare for navigation."
   },
   {

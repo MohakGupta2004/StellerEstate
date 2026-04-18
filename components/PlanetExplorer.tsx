@@ -1,12 +1,12 @@
 'use client'
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronLeft, ChevronRight, MessageSquare, ShieldCheck, AlertTriangle, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, MessageSquare, AlertTriangle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PLANETS, Planet } from '@/lib/planets';
 import { cn } from '@/lib/utils';
 import { useSentience } from '@/hooks/useSentience';
-import { GHOAModal } from '@/components/GHOAModal';
+import { GHOAModal, AuditReport } from '@/components/GHOAModal';
 
 interface PlanetExplorerProps {
   onBuy: (planet: Planet) => void;
@@ -16,7 +16,7 @@ export const PlanetExplorer: React.FC<PlanetExplorerProps> = ({ onBuy }) => {
   const [activeIndex, setActiveIndex] = useState(4); // Start with Mars
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
   const [isAuditing, setIsAuditing] = useState(false);
-  const [citation, setCitation] = useState<string | null>(null);
+  const [citation, setCitation] = useState<AuditReport | null>(null);
   const { reportEvent } = useSentience();
   
   const activePlanet = PLANETS[activeIndex];
@@ -45,7 +45,7 @@ export const PlanetExplorer: React.FC<PlanetExplorerProps> = ({ onBuy }) => {
         }),
       });
       const data = await response.json();
-      setCitation(data.citation);
+      setCitation(data.dossier);
     } catch (err) {
       console.error("Audit failed", err);
     } finally {
@@ -83,10 +83,10 @@ export const PlanetExplorer: React.FC<PlanetExplorerProps> = ({ onBuy }) => {
 
   return (
     <>
-      <GHOAModal 
-        citation={citation} 
-        isOpen={!!citation} 
-        onClose={() => setCitation(null)} 
+      <GHOAModal
+        report={citation}
+        isOpen={!!citation}
+        onClose={() => setCitation(null)}
       />
 
       {/* Dynamic Sentient Aura Overlay - Layered for depth */}
@@ -134,15 +134,28 @@ export const PlanetExplorer: React.FC<PlanetExplorerProps> = ({ onBuy }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center text-red-500"
+              className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-sm flex flex-col items-center justify-center text-amber-400/80 gap-6"
             >
               <div className="relative">
-                <Loader2 className="w-16 h-16 animate-spin mb-4" />
-                <div className="absolute inset-0 blur-xl bg-red-500/20 animate-pulse" />
+                {[0,1,2].map(i => (
+                  <motion.div
+                    key={i}
+                    initial={{ scale: 0.2, opacity: 0.7 }}
+                    animate={{ scale: 3, opacity: 0 }}
+                    transition={{ duration: 2, repeat: Infinity, delay: i * 0.65, ease: 'easeOut' }}
+                    className="absolute inset-0 border border-amber-400/30 rounded-full"
+                  />
+                ))}
+                <Loader2 className="w-10 h-10 animate-spin relative z-10" />
               </div>
-              <p className="font-mono text-sm tracking-[0.3em] uppercase animate-pulse">
-                Initiating Galactic Audit...
-              </p>
+              <div className="text-center space-y-1">
+                <p className="font-mono text-xs tracking-[0.4em] uppercase animate-pulse">
+                  Accessing Classified Records...
+                </p>
+                <p className="font-mono text-[9px] tracking-widest uppercase text-amber-500/30">
+                  Galactic Property Intelligence
+                </p>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -267,11 +280,11 @@ export const PlanetExplorer: React.FC<PlanetExplorerProps> = ({ onBuy }) => {
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10 w-full max-w-xl">
-                  <div className="glass-dark p-5 rounded-2xl text-left flex gap-4 items-start cursor-pointer hover:bg-white/5 transition-colors group" onClick={handleAudit}>
-                    <ShieldCheck className="w-6 h-6 text-red-500 shrink-0 mt-1 animate-pulse group-hover:scale-110 transition-transform" />
+                  <div className="glass-dark p-5 rounded-2xl text-left flex gap-4 items-start cursor-pointer hover:bg-amber-500/5 transition-colors group" onClick={handleAudit}>
+                    <AlertTriangle className="w-6 h-6 text-amber-400/70 shrink-0 mt-1 group-hover:scale-110 transition-transform" />
                     <div>
-                      <p className="text-[10px] uppercase tracking-widest text-red-500/60 mb-1">Entropy Check</p>
-                      <p className="text-sm font-medium text-red-100 italic">Audit for Violations</p>
+                      <p className="text-[10px] uppercase tracking-widest text-amber-500/50 mb-1">Classified Intel</p>
+                      <p className="text-sm font-medium text-amber-100/80 italic">Access Property Dossier</p>
                     </div>
                   </div>
                   <div className="glass-dark p-5 rounded-2xl text-left flex gap-4 items-start">
