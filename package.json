@@ -11,6 +11,7 @@
   "dependencies": {
     "@base-ui/react": "^1.4.0",
     "@fontsource-variable/geist": "^5.2.8",
+    "@google/genai": "^1.50.1",
     "@types/canvas-confetti": "^1.9.0",
     "base-ui": "^0.0.294",
     "canvas-confetti": "^1.9.4",

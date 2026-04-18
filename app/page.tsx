@@ -5,6 +5,7 @@ import { Navbar } from '@/components/Navbar';
 import { Hero } from '@/components/Hero';
 import { PlanetExplorer } from '@/components/PlanetExplorer';
 import { BuyModal } from '@/components/BuyModal';
+import { AIConcierge } from '@/components/AIConcierge';
 import { Planet } from '@/lib/planets';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -59,6 +60,8 @@ export default function App() {
         isOpen={isBuyModalOpen} 
         onClose={() => setIsBuyModalOpen(false)} 
       />
+
+      <AIConcierge />
 
       {/* Footer */}
       <footer className="fixed bottom-0 left-0 right-0 p-6 flex justify-between items-center pointer-events-none z-50">
