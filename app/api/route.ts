@@ -51,7 +51,7 @@ export async function POST(req: Request) {
         "\nAgent:";
 
       const result = await genAI.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.0-flash",
         contents: systemPrompt,
       });
 
@@ -71,7 +71,7 @@ export async function POST(req: Request) {
         ". Be creative and funny. No quotes around your response.";
 
       const result = await genAI.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.0-flash",
         contents: insightPrompt,
       });
 
@@ -86,7 +86,7 @@ export async function POST(req: Request) {
         `You are Agent VOID-9, a classified Galactic Property Intelligence operative. Generate a secret dossier on this planet for a prospective buyer.\nPlanet: ${planetName}\nListing details: ${details}\n\nReturn ONLY valid JSON, no markdown, no code blocks:\n{\n  "caseId": "GPI-XXXXX (5 random digits)",\n  "clearanceLevel": "one of: CLASSIFIED / TOP SECRET / EYES ONLY / COSMIC CLEARANCE",\n  "sections": [\n    {"label": "STRUCTURAL CONDITION", "content": "1-2 sentence absurd but specific assessment", "flag": "OK|WARNING|DANGER"},\n    {"label": "OCCUPANCY STATUS", "content": "any alien tenants, squatters, or void entities", "flag": "OK|WARNING|DANGER|UNKNOWN"},\n    {"label": "HAZARD ASSESSMENT", "content": "cosmic dangers, hostile neighbors, environmental risks", "flag": "OK|WARNING|DANGER"},\n    {"label": "INVESTMENT OUTLOOK", "content": "absurd financial analysis with made-up galactic market data", "flag": "OK|WARNING|DANGER"}\n  ],\n  "verdict": "BUY|AVOID|PROCEED WITH CAUTION",\n  "verdictReason": "one punchy funny sentence",\n  "classified": "one genuinely surprising absurd secret about this planet that no listing mentions",\n  "agent": "a cool spy codename like 'Agent Null-7' or 'Operative Singularity'"\n}\n\nRules: be specific to this planet's real traits, mix genuine-sounding with absurd humor, classified should feel like a real secret`;
 
       const result = await genAI.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.0-flash-lite",
         contents: auditPrompt,
       });
 
@@ -111,7 +111,7 @@ export async function POST(req: Request) {
         `You are Agent VOID-9, a Galactic Property Intelligence operative. A buyer is disputing your classified dossier findings.\nYour findings:\n${sectionSummary}\nVerdict: ${dossier.verdict} — ${dossier.verdictReason}\n\nBuyer says: "${message}"\n\nRespond in 2-3 sentences as a dry, slightly sinister intelligence operative. Either stand your ground with classified evidence they can't verify, or reluctantly revise one finding while adding a new suspicious detail. Stay in character. No bureaucracy — more spy thriller.`;
 
       const result = await genAI.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-2.0-flash-lite",
         contents: appealPrompt,
       });
 
