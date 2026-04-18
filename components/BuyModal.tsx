@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { toJpeg } from 'html-to-image';
@@ -11,10 +12,10 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Planet } from '@/src/lib/planets';
+import { Planet } from '@/lib/planets';
 import { Loader2, CheckCircle2, Download, RefreshCw, ShieldCheck, Globe, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { generateGalacticBlessing } from '@/src/lib/gemini';
+import { generateGalacticBlessing } from '@/lib/gemini';
 import { cn } from '@/lib/utils';
 
 interface BuyModalProps {
@@ -119,7 +120,7 @@ export const BuyModal: React.FC<BuyModalProps> = ({ planet, isOpen, onClose }) =
   if (!planet) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && reset()}>
+    <Dialog open={isOpen} onOpenChange={(open: boolean) => { if (!open) reset(); }}>
       <DialogContent className="w-[95vw] sm:max-w-[500px] glass-dark border-white/10 text-white p-0 overflow-hidden max-h-[95vh] overflow-y-auto">
         <AnimatePresence mode="wait">
           {step === 'input' && (

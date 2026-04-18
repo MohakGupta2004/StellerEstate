@@ -1,10 +1,11 @@
+'use client'
 import React, { useState } from 'react';
-import { StarBackground } from '@';
-import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { PlanetExplorer } from './components/PlanetExplorer';
-import { BuyModal } from './components/BuyModal';
-import { Planet } from './lib/planets';
+import { StarBackground } from '@/components/StarBackground';
+import { Navbar } from '@/components/Navbar';
+import { Hero } from '@/components/Hero';
+import { PlanetExplorer } from '@/components/PlanetExplorer';
+import { BuyModal } from '@/components/BuyModal';
+import { Planet } from '@/lib/planets';
 import { motion, AnimatePresence } from 'motion/react';
 
 type View = 'home' | 'explore';
