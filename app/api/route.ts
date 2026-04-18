@@ -4,15 +4,15 @@ import { NextResponse } from "next/server";
 const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
 const PLANET_CATALOG = [
-  "THE SUN - $999,999 - Massive ball of plasma. Too hot. Ultimate space heater.",
-  "MERCURY - $4,500 - Closest to the sun. Cheap starter planet.",
-  "VENUS - $8,200 - Beautiful but sulfuric acid atmosphere.",
+  "THE SUN - ◎1.001 SOL - Massive ball of plasma. Too hot. Ultimate space heater.",
+  "MERCURY - ◎0.0045 SOL - Closest to the sun. Cheap starter planet.",
+  "VENUS - ◎0.0082 SOL - Beautiful but sulfuric acid atmosphere.",
   "EARTH - SOLD OUT - Overrated. Too many humans.",
-  "MARS - $12,999 - Red, dusty, Elon approved. Great potential.",
-  "JUPITER - $25,000 - Gas giant, no solid ground. Gas fees apply.",
-  "SATURN - $32,000 - Most stylish. Has rings. Premium real estate.",
-  "PLUTO - $999 - Small, cold, lonely. Perfect for introverts. On sale.",
-  "BLACK HOLE - $99,999 - Infinite density. No refunds. Ever.",
+  "MARS - ◎0.013 SOL - Red, dusty, Elon approved. Great potential.",
+  "JUPITER - ◎0.025 SOL - Gas giant, no solid ground. Gas fees apply.",
+  "SATURN - ◎0.032 SOL - Most stylish. Has rings. Premium real estate.",
+  "PLUTO - ◎0.001 SOL - Small, cold, lonely. Perfect for introverts. On sale.",
+  "BLACK HOLE - ◎0.1 SOL - Infinite density. No refunds. Ever.",
 ].join("\n");
 
 export async function POST(req: Request) {

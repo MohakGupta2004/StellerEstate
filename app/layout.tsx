@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "@fontsource-variable/geist";
 import "./globals.css";
+import { SolanaWalletProvider } from "@/providers/WalletProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,7 +15,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full antialiased dark">
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <SolanaWalletProvider>{children}</SolanaWalletProvider>
+      </body>
     </html>
   );
 }

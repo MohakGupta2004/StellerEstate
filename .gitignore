@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# solana test validator ledger (contains Unix sockets, breaks Turbopack)
+/test-ledger

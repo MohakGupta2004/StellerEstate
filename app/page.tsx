@@ -1,11 +1,13 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { StarBackground } from '@/components/StarBackground';
 import { Navbar } from '@/components/Navbar';
 import { Hero } from '@/components/Hero';
 import { PlanetExplorer } from '@/components/PlanetExplorer';
 import { BuyModal } from '@/components/BuyModal';
 import { AIConcierge } from '@/components/AIConcierge';
+import { ScrollGateHint } from '@/components/ScrollGateHint';
+import { useScrollGate } from '@/hooks/useScrollGate';
 import { Planet } from '@/lib/planets';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -16,8 +18,25 @@ export default function App() {
   const [selectedPlanet, setSelectedPlanet] = useState<Planet | null>(null);
   const [isBuyModalOpen, setIsBuyModalOpen] = useState(false);
 
-  const handleExplore = () => setView('explore');
-  const handleHome = () => setView('home');
+  const handleExplore = useCallback(() => setView('explore'), []);
+  const handleHome = useCallback(() => setView('home'), []);
+
+  const { gateState, reset } = useScrollGate({
+    onScrollUp: () => {
+      if (view === 'home') {
+        handleExplore();
+        reset();
+      }
+    },
+    onScrollDown: () => {
+      if (view === 'explore') {
+        handleHome();
+        reset();
+      }
+    },
+    // Disable gate when modals are open
+    enabled: !isBuyModalOpen,
+  });
 
   const handleBuy = (planet: Planet) => {
     setSelectedPlanet(planet);
@@ -25,10 +44,10 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen font-sans selection:bg-white selection:text-black">
+    <div className="min-h-screen font-sans selection:bg-white selection:text-black overflow-hidden">
       <StarBackground />
       <Navbar onExplore={handleExplore} onHome={handleHome} />
-      
+
       <main>
         <AnimatePresence mode="wait">
           {view === 'home' ? (
@@ -55,13 +74,20 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      <BuyModal 
-        planet={selectedPlanet} 
-        isOpen={isBuyModalOpen} 
-        onClose={() => setIsBuyModalOpen(false)} 
+      <BuyModal
+        planet={selectedPlanet}
+        isOpen={isBuyModalOpen}
+        onClose={() => setIsBuyModalOpen(false)}
       />
 
       <AIConcierge />
+
+      {/* Scroll gate HUD */}
+      <AnimatePresence>
+        {!isBuyModalOpen && (
+          <ScrollGateHint state={gateState} view={view} />
+        )}
+      </AnimatePresence>
 
       {/* Footer */}
       <footer className="fixed bottom-0 left-0 right-0 p-6 flex justify-between items-center pointer-events-none z-50">

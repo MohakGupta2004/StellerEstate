@@ -14,6 +14,7 @@ interface PlanetExplorerProps {
 
 export const PlanetExplorer: React.FC<PlanetExplorerProps> = ({ onBuy }) => {
   const [activeIndex, setActiveIndex] = useState(4); // Start with Mars
+  const [direction, setDirection] = useState(1); // 1 = going right, -1 = going left
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
   const [isAuditing, setIsAuditing] = useState(false);
   const [citation, setCitation] = useState<AuditReport | null>(null);
@@ -54,10 +55,12 @@ export const PlanetExplorer: React.FC<PlanetExplorerProps> = ({ onBuy }) => {
   };
 
   const nextPlanet = useCallback(() => {
+    setDirection(1);
     setActiveIndex((prev) => (prev + 1) % PLANETS.length);
   }, []);
 
   const prevPlanet = useCallback(() => {
+    setDirection(-1);
     setActiveIndex((prev) => (prev - 1 + PLANETS.length) % PLANETS.length);
   }, []);
 
@@ -188,7 +191,10 @@ export const PlanetExplorer: React.FC<PlanetExplorerProps> = ({ onBuy }) => {
                     transition={{
                       type: "spring", stiffness: 150, damping: 25, mass: 1
                     }}
-                    onClick={() => setActiveIndex(index)}
+                    onClick={() => {
+                      setDirection(index > activeIndex ? 1 : -1);
+                      setActiveIndex(index);
+                    }}
                   >
                     <div className="relative group">
                       <img
@@ -255,9 +261,9 @@ export const PlanetExplorer: React.FC<PlanetExplorerProps> = ({ onBuy }) => {
             <AnimatePresence mode="wait">
               <motion.div
                 key={activePlanet.id}
-                initial={{ opacity: 0, x: 50 }}
+                initial={{ opacity: 0, x: direction * -60 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
+                exit={{ opacity: 0, x: direction * 60 }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
                 className="flex flex-col items-center lg:items-start text-center lg:text-left"
               >
@@ -300,7 +306,7 @@ export const PlanetExplorer: React.FC<PlanetExplorerProps> = ({ onBuy }) => {
                   <div className="text-center lg:text-left">
                     <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-1">Starting Price</p>
                     <p className="text-4xl font-bold tracking-tight">
-                      {activePlanet.price === 0 ? "PRICELESS" : `$${activePlanet.price.toLocaleString()}`}
+                      {activePlanet.price === 0 ? "PRICELESS" : `◎ ${(activePlanet.price / 1e9).toFixed(4).replace(/\.?0+$/, '')}`}
                     </p>
                   </div>
                   
